@@ -45,7 +45,7 @@ async function getData(url = "", keyword = "") {
 
   // Get Property Owner API Endpoint; Caters search
   const response = await fetch(
-    backendURL + "/api/user/all" + queryParams,
+    backendURL + "/api/vehicle/all" + queryParams,
     {
       headers: {
         Accept: "application/json",
@@ -80,42 +80,45 @@ async function getData(url = "", keyword = "") {
     json.data.forEach((element) => {
       const date = new Date(element.created_at).toLocaleString();
 
-      container += `<div class="col-sm-6">
-      <div class="card mt-3" data-id="${element.id}">
-          <div class="row">
-              <div class="col-sm-4 d-flex align-items-center">
-                  <img class="rounded" src="${backendURL}/storage/${element.image}" width="100%" style="height: 150px; object-fit: cover;">
-              </div>
-  
-              <div class="col-sm-8">
-                  <div class="card-body">
-                      <div class="dropdown float-end">
-                          <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
-                          <ul class="dropdown-menu">
-                              <li>
-                                  <a class="dropdown-item" href="#" id="btn_edit" data-id="${element.id}">Edit</a>
-                              </li>
-                              <li>
-                                  <a class="dropdown-item" href="#" id="btn_delete" data-id="${element.id}">Delete</a>
-                              </li>
-                          </ul>
-                      </div>
-  
-                      <div>
-                          <h6 class="card-title"><b>Last Name:</b> ${element.lastname}</h6>
-                          <h6 class="card-text"><b>First Name:</b> ${element.firstname}</h6>
-                          <h6 class="card-text"><b>Role:</b> ${element.role}</h6>
-                          <h6 class="card-title"><b>Email:</b> ${element.email}</h6>
-                      </div>
-                      <h6 class="card-subtitle text-body-secondary mt-4">
-                          <small><b>Date created:</b> ${date}</small>
-                      </h6>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  `;
+      container += `<div class="col-sm-12">
+                    <div class="card w-100 mt-3" data-id="${element.VIN}">
+                    
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <img class="rounded" src="${backendURL}/storage/${element.image}" width="100%" height="270px">
+                        </div>
+
+                        <div class="col-sm-8">
+                        <div class="card-body">
+                                <div class="dropdown float-end">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#" id="btn_edit" data-id="${element.VIN}">Edit</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" id="btn_delete" data-id="${element.VIN}">Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div>
+                            <h6 class="card-title"><b>VIN:</b>     ${element.VIN}</h5>
+                            
+                            <h6 class="card-text"><b>Price:</b>     ${element.price}</h6>
+                            <h6 class="card-text"><b>Transmission:</b>     ${element.transmission}</h6>
+                            <h6 class="card-title"><b>Color:</b>     ${element.color}</h5>
+                            
+                            </div>
+                            <h6 class="card-subtitle text-body-secondary mt-4">
+                            <small><b>Date created:</b>     ${date}</small>
+                            </h6>
+                        </div>
+                        </div>
+                        
+
+                    </div>
+                  </div>`;
     });
 
     // Use the container to display the fetch data
@@ -173,16 +176,14 @@ form_search.onsubmit = async (e) => {
 
 //Store and Update Functionality Combined
 // Submit Form Functionality; This is for create and update 
-const form_users = document.getElementById("form_users");
+const form_vehicles = document.getElementById("form_vehicles");
 
-form_users.onsubmit = async (e) => {
-  console.log('Form submitted'); // Add this line
+form_vehicles.onsubmit = async (e) => {
   e.preventDefault();
 
   // Disable button
-  console.log('Disabling button'); // Add this line
-  document.querySelector("#form_users button[type = 'submit']").disabled = true;
-  document.querySelector("#form_users button[type = 'submit']").innerHTML = 
+  document.querySelector("#form_vehicles button[type = 'submit']").disabled = true;
+  document.querySelector("#form_vehicles button[type = 'submit']").innerHTML = 
   `<div class="col-sm-12 d-flex justify-content-center align-items-center">
       <div class="spinner-border" role="status">
           <span class="visually-hidden">Loading...</span>
@@ -191,9 +192,7 @@ form_users.onsubmit = async (e) => {
   </div>`;
 
   //   Get values of form (input, textarea, select) put it as form-data
-  const formData = new FormData(form_users);
-
-  console.log('Form data:', formData); // Add this line
+  const formData = new FormData(form_vehicles);
 
   // Check Key/value pairs of form data; Uncomment to debug
   // for (let [name, value] of formData) {
@@ -206,12 +205,12 @@ form_users.onsubmit = async (e) => {
   // Check if for_update_id is empty; If it is empty then it's create, else it's update
   if (for_update_id == "") {
 
-  // const id = document.querySelector('#form_users input[type="hidden"]').value;
+  // const id = document.querySelector('#form_vehicles input[type="hidden"]').value;
   // const forUpdate = id.length > 0 ? true : false;
 
   //   fetch API property owner store endpoint
   response = await fetch(
-    backendURL + "/api/user",
+    backendURL + "/api/vehicle",
     {
       method: "POST",
       headers: {
@@ -231,7 +230,7 @@ form_users.onsubmit = async (e) => {
 
     //   fetch API property owner update endpoint
     response = await fetch(
-      backendURL + "/api/user/" + for_update_id,
+      backendURL + "/api/vehicle/" + for_update_id,
       {
         method: "POST", //Change to POST if with Image Upload
         headers: {
@@ -254,7 +253,7 @@ form_users.onsubmit = async (e) => {
   //   console.log(`${name} = ${value}`); 
   // }
 
-  // const id = document.querySelector('#form_users input[type="hidden"]').value;
+  // const id = document.querySelector('#form_vehicles input[type="hidden"]').value;
   // const forUpdate = id.length > 0 ? true : false;
 
   // Get response if 200-299 status code
@@ -264,12 +263,12 @@ form_users.onsubmit = async (e) => {
     // console.log(json);
 
     // Reset Form
-    form_users.reset();
+    form_vehicles.reset();
 
     // // Refresh the page
     // location.reload(); 
 
-    successNotification("Successfully" + (for_update_id == "" ? " created":" updated") + " user.", 10);
+    successNotification("Successfully" + (for_update_id == "" ? " created":" updated") + " vehicle.", 10);
 
     // Close Modal
     document.getElementById("modal_close").click();
@@ -287,6 +286,7 @@ form_users.onsubmit = async (e) => {
   // Get response if 422 status code
   else if (response.status == 422) {
     const json = await response.json();
+    
 
     // Close Modal
     document.getElementById("modal_close").click();
@@ -297,8 +297,8 @@ form_users.onsubmit = async (e) => {
   // Always reset for_update_id to empty string
   for_update_id = "";
 
-  document.querySelector("#form_users button[type='submit']").disabled = false;
-  document.querySelector("#form_users button[type='submit']").innerHTML = "Submit";
+  document.querySelector("#form_vehicles button[type='submit']").disabled = false;
+  document.querySelector("#form_vehicles button[type='submit']").innerHTML = "Submit";
 };
 
 // Delete Functionality
@@ -318,7 +318,7 @@ const deleteAction = async (e) => {
 
     // Fetch API property owner delete endpoint
     const response = await fetch(
-      backendURL + "/api/user/" + id, 
+      backendURL + "/api/vehicle/" + id, 
       {
         method: "DELETE",
         headers: {
@@ -335,7 +335,7 @@ const deleteAction = async (e) => {
       // const json = await response.json();
       // console.log(json);
 
-      successNotification("Successfully deleted user", 10);
+      successNotification("Successfully deleted vehicle", 10);
 
       // Remove the card from the list 
       document.querySelector(`.card[data-id="${id}"]`).remove();
@@ -385,7 +385,7 @@ const showData = async (id) => {
 
   // Fetch API Dealer show endpoint
 const response = await fetch(
-    backendURL + "/api/user/" + id,  {
+    backendURL + "/api/vehicle/" + id,  {
     headers: {
         Accept: "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -402,16 +402,15 @@ if (response.ok) {
     for_update_id = json.id;
 
     // Display json response to Form tags; make sure to set id attribute on tags (input, textarea, select)
-    document.getElementById("lastname").value = json.lastname;
-    document.getElementById("firstname").value = json.firstname;
-    document.getElementById("role").value = json.role;
-    document.getElementById("email").value = json.email;
+    document.getElementById("price").value = json.price;
+    document.getElementById("transmission").value = json.transmission;
+    document.getElementById("color").value = json.color;
+    document.getElementById("model_id").value = json.model_id;
+    document.getElementById("brand_id").value = json.brand_id;
     document.getElementById("dealer_id").value = json.dealer_id;
-    document.getElementById("password").value = json.password;
-    document.getElementById("password_confirmation").value = json.password_confirmation;
 
     // Change Button Description; You can also use textContent instead of innerHTML
-    document.querySelector("#form_users button[type='submit']").innerHTML = "Update Info";
+    document.querySelector("#form_vehicles button[type='submit']").innerHTML = "Update Info";
 
     // Handle file input separately if it's a file input
     const imageInput = document.getElementById("image");

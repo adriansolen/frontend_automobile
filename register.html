@@ -6,13 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Register - AsseTax</title>
-        <link href="css/dashboard.css" rel="stylesheet" />
+        <title>Agusan Auto Garage Legacy</title>
+        <link href="assets/css/dashboard.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
-        <script src="js/auth/register.js" type="module"></script> 
+        <script src="assets/js/auth/register.js" type="module"></script> 
     </head>
-    <body class="bg-danger">
+    <body class="bg-primary">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
                 <main>
@@ -23,8 +23,11 @@
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
                                     <div class="card-body">
                                         <!-- Notification -->
-                                        <div class="alert alert-danger d-none" role="alert"></div>
-                                        <div class="alert alert-success d-none" role="alert"></div>
+                                        <div class="alert alert-danger d-none" role="alert">
+
+                                        </div>
+                                        <div class="alert alert-success d-none" role="alert">
+                                        </div>
                                         <!-- Registration Form -->
                                         <form id="form_register">
                                             <div class="row mb-3">
@@ -52,21 +55,42 @@
                                             </div>
                                             <div class="form-floating mb-3">
                                                 <!-- Email field -->
-                                                <input class="form-control" id="email" name="email" type="email" placeholder="Email Address" required/>
+                                                <input 
+                                                    class="form-control"
+                                                    id="email"
+                                                    name="email"
+                                                    type="email"
+                                                        placeholder="Email Address"
+                                                        required
+                                                        />
                                                 <label for="email">Email Address</label>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
                                                         <!-- Password field -->
-                                                        <input class="form-control" id="password" name="password" type="password" placeholder="Password" required/>
+                                                            <input 
+                                                            class="form-control"
+                                                            id="password"
+                                                            name="password"
+                                                            type="password"
+                                                                placeholder="Password"
+                                                                required
+                                                                />
                                                         <label for="password">Password</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
                                                         <!-- Password Confirmation field -->
-                                                        <input class="form-control" id="password_confirmation" name="password_confirmation" type="password" placeholder="Confirm Password" required/>
+                                                            <input
+                                                            class="form-control"
+                                                            id="password_confirmation"
+                                                            name="password_confirmation"
+                                                                type="password" 
+                                                                placeholder="Confirm Password" 
+                                                                required
+                                                                />
                                                         <label for="password_confirmation">Confirm Password</label>
                                                     </div>
                                                 </div>

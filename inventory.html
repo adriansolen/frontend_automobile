@@ -6,15 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Vehicle</title>
+        <title>Inventory</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="assets/css/dashboard.css" rel="stylesheet" />
         <link rel="stylesheet" href="assets/css/dashboard.css">
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="assets/js/utils/scripts.js" defer></script>
-        <script type="module" src="assets/js/utils/utils.js"></script>
+        <!-- <script type="module" src="js/utils/utils.js"></script> -->
+        <script type="module" src="assets/js/dashboard/inventory.js"></script>
         <script type="module" src="assets/js/dashboard/dashboard.js"></script>
-        <script type="module" src="assets/js/dashboard/vehicle.js"></script>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -45,9 +45,9 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <!-- <div class="sb-sidenav-menu-heading">Core</div> -->
-                            <!-- <a class="nav-link" href="dashboard.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <!-- <div class="sb-sidenav-menu-heading">Core</div>
+                            <a class="nav-link" href="dashboard.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
                                 Profile
                             </a> -->
                             <div class="sb-sidenav-menu-heading">Pages</div>
@@ -63,10 +63,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-search-location"></i></div>
                                 Dealer lookup
                             </a>
-                            <!-- <a class="nav-link" href="inventory.html">
+                            <a class="nav-link" href="inventory.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-clipboard-list"></i></div>
                                 Dealer Inventory
-                            </a> -->
+                            </a>
                             <!-- Admin Pages -->
                             <div id="nav_admin_pages"></div>
                             <!-- End of Admin Pages -->
@@ -79,56 +79,102 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <div class="container-fluid px-4 justify-content-center bg-dark">
-                    <h1 class="mt-4 text-center fw-bold text-danger">Select your Vehicle Model</h1>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Dealer Inventory</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="dashboard.html">Profile</a></li>
+                        <li class="breadcrumb-item"><a href="vehicle.html">Vehicles</a></li>
+                        <li class="breadcrumb-item"><a href="dealer.html">Dealer Locator</a></li>
+                        <li class="breadcrumb-item active">Dealer Inventory</li>
+                    </ol>
                     
                     <!-- Modal -->
                     <div class="modal fade" id="form_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Dealer Contact Information</h1>
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Vehicle Form</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <!-- Input Form -->
-                                <form id="form_vehicles">
+                                <form id="form_inventory">
                                     <!-- Modal Body -->
                                     <div class="modal-body">
-                                        <input type="hidden" name="user_id" id="user_id"/>
-                                        <!-- Dealer Field -->
-                                        <div class="row">
-                                            
-                                            <div class="col-sm-9">
-                                            <input class="form-control" type="hidden" name="dealer_name" id="dealer_name" required>
+                                        <input type="hidden" name="VIN" id="VIN"/>
+                                        <!-- Property Owner Name Field -->
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                            <label for="">In Inventory:</label>
                                             </div>
-                                        </div>
-                                        <!-- Area Field -->
-                                        <div class="row">
-                                            
                                             <div class="col-sm-9">
-                                            <input class="form-control" type="hidden" name="area" id="area" required>
+                                            <input class="form-control" type="text" name="in_inventory" id="in_inventory" required>
                                             </div>
                                         </div>
                                         <!-- Address Field -->
-                                        <div class="row">
-                                            
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                            <label for="">Price:</label>
+                                            </div>
                                             <div class="col-sm-9">
-                                            <input class="form-control" type="hidden" name="address" id="address" required>
+                                            <input class="form-control" type="text" name="price" id="price" required>
                                             </div>
                                         </div>
-                                        <!-- Phone Field -->
-                                        <div class="row">
-                                            
+                                        <!-- Email Field -->
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                            <label for="">Transmission:</label>
+                                            </div>
                                             <div class="col-sm-9">
-                                                <input class="form-control" type="hidden" name="phone" id="phone" required>
-                                                </div>
+                                            <input class="form-control" type="text" name="transmission" id="transmission" required>
+                                            </div>
                                         </div>
-                                        
-                                        <!-- Your HTML content -->
-                                        <div id="dealer_container"></div>
-                                        
+                                        <!-- Email Field -->
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                            <label for="">Sold:</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                            <input class="form-control" type="text" name="sold" id="sold" required>
+                                            </div>
+                                        </div>
+                                        <!-- Email Field -->
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                            <label for="">Color:</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                            <input class="form-control" type="text" name="color" id="color" required>
+                                            </div>
+                                        </div>
+                                        <!-- Email Field -->
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                            <label for="">Sale Date:</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                            <input class="form-control" type="text" name="sale_date" id="sale_date" required>
+                                            </div>
+                                        </div>
+                                        <!-- Email Field -->
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                            <label for="">Model:</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                            <input class="form-control" type="text" name="model_id" id="model_id" required>
+                                            </div>
+                                        </div>
+                                        <!-- Email Field -->
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3">
+                                            <label for="">Brand:</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                            <input class="form-control" type="text" name="brand_id" id="brand_id" required>
+                                            </div>
+                                        </div>
                                         <!-- Image File Field -->
-                                        <!-- <div class="row mb-3">
+                                        <div class="row mb-3">
                                             <div class="col-sm-12">
                                             <input
                                                 class="form-control"
@@ -138,7 +184,7 @@
                                                 
                                             />
                                             </div>
-                                        </div> -->
+                                        </div>
                                     </div>
                                     <!-- End of Modal Body -->
 
@@ -156,32 +202,25 @@
                     <!-- End of Modal -->
 
                     <!-- Search Form -->
-                    <form id="form_search" class="d-flex justify-content-center ms-5 ps-5 mt-4 mb-5">
-                        <!-- <div class="col-sm-1">
-                            <label for="keyword">Search:</label>
-                        </div>
-                        <div class="col-sm-3">
-                            <input class="form-control" type="text" name="keyword" id="keyword" placeholder="Search Keyword">
-                        </div> -->
-                        
-                        <div class="col-sm-4 ">
-                            <div class="input-group oval-container">
-                                <span class="input-group-text oval-icon"><i class="fas fa-search"></i></span>
-                                <input class="form-control oval-input" type="text" name="brand" id="brand" placeholder="Search a Brand">
+                    <form id="form_search">
+                        <div class="row mt-5">
+                            <div class="col-sm-4">
+                                <div class="oval-container">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input class="form-control oval-input" type="text" name="model" id="model" placeholder="Search Model">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-primary oval-button" type="submit">Search</button>
+                            </div>
+                            <!-- Button trigger modal -->
+                            <div class="col-sm-4 d-flex justify-content-end">
+                                <button id="modal_show" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#form_modal">
+                                    Add Vehicles
+                                </button>
                             </div>
                         </div>
-                        <div class="col-sm-2">
-                            <button class="btn btn-danger mx-2 oval-button" type="submit">Search</button>
-                        </div>
-                    
-                        <!-- Button trigger modal -->
-                        <!-- <div class="col-sm-2 ms-auto mt-4">
-                            <button id="modal_show" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#form_modal">
-                                Add Vehicles
-                            </button>
-                        </div> -->
                     </form>
-                    
                     <!-- End of Search Form -->
 
                         <hr />

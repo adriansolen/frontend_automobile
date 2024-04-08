@@ -15,7 +15,7 @@ setRouter();
 // .then((data) => console.log(data))
 // .catch((err) => console.log(err));
 
-const backendURL = "https://d895-143-44-193-12.ngrok-free.app/backend-automobile-toyota/public";
+const backendURL = "http://automobile-garage.test";
 //Old URL from laravel
 //http://webapp-tax-advisor.test
 
@@ -67,15 +67,60 @@ async function getLoggedUser(){
     }
 };
 
+// Show Dealer Pages
+function showNavDealerPages() {
+  if (localStorage.getItem("role") == "Dealer") {
+   document.getElementById("nav_dealer_pages").innerHTML = 
+    `<div class="sb-sidenav-menu-heading">Dealer Pages</div>
+    <a class="nav-link" href="my-inventory.html">
+        <div class="sb-nav-link-icon"><i class="fas fa-boxes"></i></div>
+        My Inventory
+    </a>`;
+    
+    // Highlight the active page
+    var currentPageUrl = window.location.href;
+    var navLinks = document.querySelectorAll('#nav_admin_pages .nav-link');
+
+    navLinks.forEach(function(link) {
+        if (link.href === currentPageUrl) {
+            link.classList.add('active');
+        }
+    });
+  }
+}
 // Show Admin Pages
 function showNavAdminPages() {
   if (localStorage.getItem("role") == "Admin") {
    document.getElementById("nav_admin_pages").innerHTML = 
     `<div class="sb-sidenav-menu-heading">Admin Pages</div>
-    <a class="nav-link" href="users.html">
+    <a class="nav-link" href="user.html">
         <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
         Users
-    </a>`;
+    </a>
+    <a class="nav-link" href="admin-vehicle.html">
+        <div class="sb-nav-link-icon"><i class="fa-solid fa-car"></i></div>
+        Vehicles
+    </a>
+    <a class="nav-link" href="model.html">
+        <div class="sb-nav-link-icon"><i class="fa-solid fa-car-side"></i></div>
+        Models 
+    </a>
+
+    <a class="nav-link" href="data-query.html">
+        <div class="sb-nav-link-icon"><i class="fa-solid fa-car-side"></i></div>
+        Data
+    </a>
+    `;
+
+    // Highlight the active page
+    var currentPageUrl = window.location.href;
+    var navLinks = document.querySelectorAll('#nav_admin_pages .nav-link');
+
+    navLinks.forEach(function(link) {
+        if (link.href === currentPageUrl) {
+            link.classList.add('active');
+        }
+    });
   }
 }
 
@@ -130,4 +175,4 @@ function errorNotification(message, seconds = 0){
     }
 }
 
-export { backendURL, showNavAdminPages, successNotification, errorNotification, getLoggedUser};
+export { backendURL, showNavAdminPages, showNavDealerPages, successNotification, errorNotification, getLoggedUser};

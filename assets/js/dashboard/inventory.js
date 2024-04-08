@@ -1,4 +1,4 @@
-import { backendURL, showNavAdminPages, successNotification, errorNotification, getLoggedUser, } from "../utils/utils.js";
+import { backendURL, showNavDealerPages, showNavAdminPages, successNotification, errorNotification, getLoggedUser, } from "../utils/utils.js";
 
 // calling function - important to execute the code inside the function
 getLoggedUser();
@@ -7,6 +7,8 @@ getLoggedUser();
 getData();
 
 showNavAdminPages();
+
+showNavDealerPages();
 
 async function getData(url = "", keyword = "") {
   // Add Loading if pagination or search is used; Remove if its not needed
@@ -20,6 +22,9 @@ async function getData(url = "", keyword = "") {
     </div>`;
   }
 
+  // Clear existing content before loading new data
+  document.getElementById("get_data").innerHTML = "";
+
   // To cater pagination and search feature
   let queryParams = "?" + 
   (url != "" ? new URL(url).searchParams + "&" : "") + //Remove this line if not using pagination
@@ -27,7 +32,7 @@ async function getData(url = "", keyword = "") {
 
   // Get Property Owner API Endpoint; Caters search
   const response = await fetch(
-    backendURL + "/api/owner" + queryParams,
+    backendURL + "/api/inventory" + queryParams,
     {
       headers: {
         Accept: "application/json",
@@ -54,6 +59,7 @@ async function getData(url = "", keyword = "") {
   if (response.ok) {
     const json = await response.json();
 
+    console.log(json);
     // Get Each Json Elements and merge with HTML element and put it into a container 
     let container = "";
     // Now caters pagination; You can use "json.data" if using pagination or "json" only if no pagination
@@ -61,28 +67,31 @@ async function getData(url = "", keyword = "") {
       const date = new Date(element.created_at).toLocaleString();
 
       container += `<div class="col-sm-12">
-                    <div class="card w-100 mt-3" data-id="${element.id}">
-                      <div class="card-body">
-                        <div class="dropdown float-end">
-                          <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
-                          <ul class="dropdown-menu">
-                            <li>
-                            <a class="dropdown-item" href="#" id="btn_edit" data-id="${element.id}">Edit</a>
-                            </li>
-                            <li>
-                              <a class="dropdown-item" href="#" id="btn_delete" data-id="${element.id}">Delete</a>
-                            </li>
-                          </ul>
+                    <div class="card w-100 mt-3" data-id="${element.inventory_id}">
+                    
+                    <div class="row">
+                        <div class="col-sm-4 d-flex align-items-center">
+                            <img class="rounded" src="${backendURL}/storage/${element.image}" width="100%" height="270px">
                         </div>
-                        <div>
-                          <h6 class="card-title"><b>Name:</b>     ${element.property_owner_name}</h5>
-                          <h6 class="card-text"><b>Address:</b>     ${element.address}</h6>
-                          <h6 class="card-text"><b>Email:</b>     ${element.email}</h6>
+
+                        <div class="col-sm-8">
+                        <div class="card-body">
+                            
+                            <div>
+                            <h6 class="card-title"><b>VIN:</b>     ${element.VIN}</h5>
+                            <h6 class="card-text"><b>Model Name:</b>     ${element.model_name}</h6>
+                            <h6 class="card-text"><b>Category:</b>     ${element.category}</h6>
+                            <h6 class="card-title"><b>Price:</b>     ${element.price}</h5>
+                            <h6 class="card-text"><b>Color:</b>     ${element.color}</h6>
+                            <h6 class="card-text"><b>Stock:</b>     ${element.stock}</h6>
+                            <h6 class="card-title"><b>Sales:</b>     ${element.sales}</h5>
+                            <h6 class="card-text"><b>Dealer:</b>     ${element.dealer}</h6>
+                            </div>
+                            <h6 class="card-subtitle text-body-secondary mt-3">
+                            <small><b>Date created:</b>     ${date}</small>
+                            </h6>
                         </div>
-                        <span class="card-subtitle text-body-secondary mt-5">
-                          <small><b>Date created:</b>     ${date}</small>
-                        </span>
-                      </div>
+                        </div>
                     </div>
                   </div>`;
     });
@@ -133,20 +142,22 @@ form_search.onsubmit = async (e) => {
   e.preventDefault();
 
   const formData = new FormData(form_search);
+  const modelKeyword = formData.get("model");
 
-  getData("", formData.get("keyword"));
+  // Use the brandKeyword as the search parameter
+  getData("", modelKeyword);
 };
 
 //Store and Update Functionality Combined
 // Submit Form Functionality; This is for create and update 
-const form_owners = document.getElementById("form_owners");
+const form_inventory = document.getElementById("form_inventory");
 
-form_owners.onsubmit = async (e) => {
+form_inventory.onsubmit = async (e) => {
   e.preventDefault();
 
   // Disable button
-  document.querySelector("#form_owners button[type = 'submit']").disabled = true;
-  document.querySelector("#form_owners button[type = 'submit']").innerHTML = 
+  document.querySelector("#form_inventory button[type = 'submit']").disabled = true;
+  document.querySelector("#form_inventory button[type = 'submit']").innerHTML = 
   `<div class="col-sm-12 d-flex justify-content-center align-items-center">
       <div class="spinner-border" role="status">
           <span class="visually-hidden">Loading...</span>
@@ -155,7 +166,7 @@ form_owners.onsubmit = async (e) => {
   </div>`;
 
   //   Get values of form (input, textarea, select) put it as form-data
-  const formData = new FormData(form_owners);
+  const formData = new FormData(form_inventory);
 
   // Check Key/value pairs of form data; Uncomment to debug
   // for (let [name, value] of formData) {
@@ -168,12 +179,12 @@ form_owners.onsubmit = async (e) => {
   // Check if for_update_id is empty; If it is empty then it's create, else it's update
   if (for_update_id == "") {
 
-  // const id = document.querySelector('#form_owners input[type="hidden"]').value;
+  // const id = document.querySelector('#form_inventory input[type="hidden"]').value;
   // const forUpdate = id.length > 0 ? true : false;
 
   //   fetch API property owner store endpoint
   response = await fetch(
-    backendURL + "/api/owner",
+    backendURL + "/api/inventory",
     {
       method: "POST",
       headers: {
@@ -193,7 +204,7 @@ form_owners.onsubmit = async (e) => {
 
     //   fetch API property owner update endpoint
     response = await fetch(
-      backendURL + "/api/owner/" + for_update_id,
+      backendURL + "/api/inventory/" + for_update_id,
       {
         method: "PUT", //Change to POST if with Image Upload
         headers: {
@@ -216,7 +227,7 @@ form_owners.onsubmit = async (e) => {
   //   console.log(`${name} = ${value}`); 
   // }
 
-  // const id = document.querySelector('#form_owners input[type="hidden"]').value;
+  // const id = document.querySelector('#form_inventory input[type="hidden"]').value;
   // const forUpdate = id.length > 0 ? true : false;
 
   // Get response if 200-299 status code
@@ -226,12 +237,12 @@ form_owners.onsubmit = async (e) => {
     // console.log(json);
 
     // Reset Form
-    form_owners.reset();
+    form_inventory.reset();
 
     // // Refresh the page
     // location.reload(10); 
 
-    successNotification("Successfully" + (for_update_id == "" ? " created":" updated") + " property owner.", 10);
+    successNotification("Successfully" + (for_update_id == "" ? " created":" updated") + " inventory.", 10);
 
     // Close Modal
     document.getElementById("modal_close").click();
@@ -256,8 +267,8 @@ form_owners.onsubmit = async (e) => {
   // Always reset for_update_id to empty string
   for_update_id = "";
 
-  document.querySelector("#form_owners button[type='submit']").disabled = false;
-  document.querySelector("#form_owners button[type='submit']").innerHTML = "Submit";
+  document.querySelector("#form_inventory button[type='submit']").disabled = false;
+  document.querySelector("#form_inventory button[type='submit']").innerHTML = "Submit";
 };
 
 // Delete Functionality
@@ -272,7 +283,7 @@ const deleteAction = async (e) => {
 
     //   fetch API property owner delete endpoint
     const response = await fetch(
-      backendURL + "/api/owner/" + id, 
+      backendURL + "/api/inventory/" + id, 
       {
       method: "DELETE",
       headers: {
@@ -335,7 +346,7 @@ const showData = async (id) => {
 
   // Fetch API property owner delete endpoint
   const response = await fetch(
-    backendURL + "/api/owner/" + id,  {
+    backendURL + "/api/inventory/" + id,  {
     headers: {
       Accept: "application/json",
       Authorization: "Bearer " + localStorage.getItem("token"),
@@ -357,7 +368,7 @@ const showData = async (id) => {
     document.getElementById("email").value = json.email;
 
     // Change Button Description; You can also use textContent instead of innerHTML
-    document.querySelector("#form_owners button[type='submit']").innerHTML = "Update Info";
+    document.querySelector("#form_inventory button[type='submit']").innerHTML = "Update Info";
   } 
   // Get response if 400+ or 500+
   else {
@@ -373,9 +384,13 @@ const showData = async (id) => {
 const pageAction = async (e) => {
   // Get url from data-url attribute within the btn_pagination anchor tag
   const url = e.target.getAttribute("data-url");
+  
+  // Get search keyword from the form
+  const formData = new FormData(form_search);
+  const modelKeyword = formData.get("model");
 
-  // Refresh card list
-  getData(url);
+  // Refresh card list with the correct parameters
+  getData(url, modelKeyword);
 }
 
 export {getData};

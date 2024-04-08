@@ -45,7 +45,7 @@ async function getData(url = "", keyword = "") {
 
   // Get Property Owner API Endpoint; Caters search
   const response = await fetch(
-    backendURL + "/api/user/all" + queryParams,
+    backendURL + "/api/model" + queryParams,
     {
       headers: {
         Accept: "application/json",
@@ -80,42 +80,40 @@ async function getData(url = "", keyword = "") {
     json.data.forEach((element) => {
       const date = new Date(element.created_at).toLocaleString();
 
-      container += `<div class="col-sm-6">
-      <div class="card mt-3" data-id="${element.id}">
-          <div class="row">
-              <div class="col-sm-4 d-flex align-items-center">
-                  <img class="rounded" src="${backendURL}/storage/${element.image}" width="100%" style="height: 150px; object-fit: cover;">
-              </div>
-  
-              <div class="col-sm-8">
-                  <div class="card-body">
-                      <div class="dropdown float-end">
-                          <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
-                          <ul class="dropdown-menu">
-                              <li>
-                                  <a class="dropdown-item" href="#" id="btn_edit" data-id="${element.id}">Edit</a>
-                              </li>
-                              <li>
-                                  <a class="dropdown-item" href="#" id="btn_delete" data-id="${element.id}">Delete</a>
-                              </li>
-                          </ul>
-                      </div>
-  
-                      <div>
-                          <h6 class="card-title"><b>Last Name:</b> ${element.lastname}</h6>
-                          <h6 class="card-text"><b>First Name:</b> ${element.firstname}</h6>
-                          <h6 class="card-text"><b>Role:</b> ${element.role}</h6>
-                          <h6 class="card-title"><b>Email:</b> ${element.email}</h6>
-                      </div>
-                      <h6 class="card-subtitle text-body-secondary mt-4">
-                          <small><b>Date created:</b> ${date}</small>
-                      </h6>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  `;
+      container += `<div class="col-sm-12">
+                    <div class="card w-100 mt-3" data-id="${element.model_id}">
+                    
+                    <div class="row">
+
+
+                        <div class="col-sm-12">
+                        <div class="card-body">
+                                <div class="dropdown float-end">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#" id="btn_edit" data-id="${element.model_id}">Edit</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" id="btn_delete" data-id="${element.model_id}">Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div>
+                            <h6 class="card-title"><b>Model:</b>     ${element.model_name}</h5>
+                            <h6 class="card-text"><b>Category:</b>     ${element.category}</h6>
+
+                            </div>
+                            <h6 class="card-subtitle text-body-secondary mt-4">
+                            <small><b>Date created:</b>     ${date}</small>
+                            </h6>
+                        </div>
+                        </div>
+                        
+
+                    </div>
+                  </div>`;
     });
 
     // Use the container to display the fetch data
@@ -173,16 +171,16 @@ form_search.onsubmit = async (e) => {
 
 //Store and Update Functionality Combined
 // Submit Form Functionality; This is for create and update 
-const form_users = document.getElementById("form_users");
+const form_models = document.getElementById("form_models");
 
-form_users.onsubmit = async (e) => {
+form_models.onsubmit = async (e) => {
   console.log('Form submitted'); // Add this line
   e.preventDefault();
 
   // Disable button
   console.log('Disabling button'); // Add this line
-  document.querySelector("#form_users button[type = 'submit']").disabled = true;
-  document.querySelector("#form_users button[type = 'submit']").innerHTML = 
+  document.querySelector("#form_models button[type = 'submit']").disabled = true;
+  document.querySelector("#form_models button[type = 'submit']").innerHTML = 
   `<div class="col-sm-12 d-flex justify-content-center align-items-center">
       <div class="spinner-border" role="status">
           <span class="visually-hidden">Loading...</span>
@@ -191,7 +189,7 @@ form_users.onsubmit = async (e) => {
   </div>`;
 
   //   Get values of form (input, textarea, select) put it as form-data
-  const formData = new FormData(form_users);
+  const formData = new FormData(form_models);
 
   console.log('Form data:', formData); // Add this line
 
@@ -206,12 +204,12 @@ form_users.onsubmit = async (e) => {
   // Check if for_update_id is empty; If it is empty then it's create, else it's update
   if (for_update_id == "") {
 
-  // const id = document.querySelector('#form_users input[type="hidden"]').value;
+  // const id = document.querySelector('#form_models input[type="hidden"]').value;
   // const forUpdate = id.length > 0 ? true : false;
 
   //   fetch API property owner store endpoint
   response = await fetch(
-    backendURL + "/api/user",
+    backendURL + "/api/model",
     {
       method: "POST",
       headers: {
@@ -227,22 +225,22 @@ form_users.onsubmit = async (e) => {
   // For Update
   else {
     // Add Method Spoofing to cater Image Upload; Cause you are using FormData; Uncomment if necessary
-    formData.append("_method", "PUT");
+    // formData.append("_method", "PUT");
 
     //   fetch API property owner update endpoint
     response = await fetch(
-      backendURL + "/api/user/" + for_update_id,
+      backendURL + "/api/model/" + for_update_id,
       {
-        method: "POST", //Change to POST if with Image Upload
+        method: "PUT", //Change to POST if with Image Upload
         headers: {
           Accept: "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
           "ngrok-skip-browser-warning": "69420", // Include ngrok bypass header directly
         },
         // Uncomment body below; If with Image Upload
-        body: formData,
+        // body: formData,
         // Comment body below; if with Image Upload
-        // body: new URLSearchParams(formData),
+        body: new URLSearchParams(formData),
       }
     );
   }
@@ -254,7 +252,7 @@ form_users.onsubmit = async (e) => {
   //   console.log(`${name} = ${value}`); 
   // }
 
-  // const id = document.querySelector('#form_users input[type="hidden"]').value;
+  // const id = document.querySelector('#form_models input[type="hidden"]').value;
   // const forUpdate = id.length > 0 ? true : false;
 
   // Get response if 200-299 status code
@@ -264,12 +262,12 @@ form_users.onsubmit = async (e) => {
     // console.log(json);
 
     // Reset Form
-    form_users.reset();
+    form_models.reset();
 
     // // Refresh the page
     // location.reload(); 
 
-    successNotification("Successfully" + (for_update_id == "" ? " created":" updated") + " user.", 10);
+    successNotification("Successfully" + (for_update_id == "" ? " created":" updated") + " model.", 10);
 
     // Close Modal
     document.getElementById("modal_close").click();
@@ -297,8 +295,8 @@ form_users.onsubmit = async (e) => {
   // Always reset for_update_id to empty string
   for_update_id = "";
 
-  document.querySelector("#form_users button[type='submit']").disabled = false;
-  document.querySelector("#form_users button[type='submit']").innerHTML = "Submit";
+  document.querySelector("#form_models button[type='submit']").disabled = false;
+  document.querySelector("#form_models button[type='submit']").innerHTML = "Submit";
 };
 
 // Delete Functionality
@@ -318,7 +316,7 @@ const deleteAction = async (e) => {
 
     // Fetch API property owner delete endpoint
     const response = await fetch(
-      backendURL + "/api/user/" + id, 
+      backendURL + "/api/model/" + id, 
       {
         method: "DELETE",
         headers: {
@@ -335,7 +333,7 @@ const deleteAction = async (e) => {
       // const json = await response.json();
       // console.log(json);
 
-      successNotification("Successfully deleted user", 10);
+      successNotification("Successfully deleted model", 10);
 
       // Remove the card from the list 
       document.querySelector(`.card[data-id="${id}"]`).remove();
@@ -385,7 +383,7 @@ const showData = async (id) => {
 
   // Fetch API Dealer show endpoint
 const response = await fetch(
-    backendURL + "/api/user/" + id,  {
+    backendURL + "/api/model/" + id,  {
     headers: {
         Accept: "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -402,32 +400,14 @@ if (response.ok) {
     for_update_id = json.id;
 
     // Display json response to Form tags; make sure to set id attribute on tags (input, textarea, select)
-    document.getElementById("lastname").value = json.lastname;
-    document.getElementById("firstname").value = json.firstname;
-    document.getElementById("role").value = json.role;
-    document.getElementById("email").value = json.email;
-    document.getElementById("dealer_id").value = json.dealer_id;
-    document.getElementById("password").value = json.password;
-    document.getElementById("password_confirmation").value = json.password_confirmation;
+    document.getElementById("model_name").value = json.model_name;
+    document.getElementById("category").value = json.category;
+    document.getElementById("brand_id").value = json.brand_id;
+
 
     // Change Button Description; You can also use textContent instead of innerHTML
-    document.querySelector("#form_users button[type='submit']").innerHTML = "Update Info";
+    document.querySelector("#form_models button[type='submit']").innerHTML = "Update Info";
 
-    // Handle file input separately if it's a file input
-    const imageInput = document.getElementById("image");
-
-    if (imageInput) {
-      // Check if the imagePreview element exists
-      const imagePreview = document.getElementById("imagePreview");
-      if (imagePreview) {
-        // You might want to display the image or handle it in a different way
-        // This is just an example, you might need to adapt this to your use case
-        imagePreview.src = backendURL + "/storage/" + json.image;
-      }
-    } else {
-      // Otherwise, set the value as usual
-      document.getElementById("image").value = json.image;
-    }
 } 
 
 // Get response if 400+ or 500+
